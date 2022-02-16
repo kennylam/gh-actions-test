@@ -18,7 +18,7 @@ export const Default = () =>
   html`
     <bx-breadcrumb>
       <bx-breadcrumb-item>
-        <bx-breadcrumb-link href="/#">Breadcrumb 1</bx-breadcrumb-link>
+        <bx-breadcrumb-link href="/#">Breadcrumb 1111</bx-breadcrumb-link>
       </bx-breadcrumb-item>
       <bx-breadcrumb-item>
         <bx-breadcrumb-link href="/#">Breadcrumb 2</bx-breadcrumb-link>

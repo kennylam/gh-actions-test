@@ -3,9 +3,9 @@ on:
   push:
     branches:
       - 'main'
-#concurrency:
-  #group: deploy-${{ github.ref }}
-  #cancel-in-progress: true
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   deploy:
     runs-on: ubuntu-latest
