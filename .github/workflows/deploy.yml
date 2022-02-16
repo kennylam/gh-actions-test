@@ -3,16 +3,16 @@ on:
   push:
     branches:
       - 'main'
-
 #concurrency:
   #group: deploy-${{ github.ref }}
   #cancel-in-progress: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
@@ -31,6 +31,8 @@ jobs:
       - name: Building carbon-web-components storybook (Angular)
         run: yarn build-storybook:angular && cp -r storybook-static-angular storybook-static/angular
       - name: Deploying carbon-web-components storybook to GH pages
-        run: ./tools/deploy.sh
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Deploying gh-actions-test to GH pages
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: storybook-static # The folder the action should deploy.
