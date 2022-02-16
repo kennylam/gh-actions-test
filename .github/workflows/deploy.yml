@@ -1,13 +1,12 @@
 name: deploy
-
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - 'main'
 
-concurrency:
-  group: deploy-${{ github.ref }}
-  cancel-in-progress: true
+#concurrency:
+  #group: deploy-${{ github.ref }}
+  #cancel-in-progress: true
 
 jobs:
   deploy:
