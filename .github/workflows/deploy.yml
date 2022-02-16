@@ -18,19 +18,25 @@ jobs:
         with:
           node-version: '16.x'
           cache: 'yarn'
+
       - name: Install dependencies
         run: yarn install
+
       - name: Build project
         run: yarn build
+
       - name: Building carbon-web-components storybook
         run: yarn build-storybook
+
       - name: Building carbon-web-components storybook (React)
         run: yarn build-storybook:react && cp -r storybook-static-react storybook-static/react
+
       - name: Building carbon-web-components storybook (Vue)
         run: yarn build-storybook:vue && cp -r storybook-static-vue storybook-static/vue
+
       - name: Building carbon-web-components storybook (Angular)
         run: yarn build-storybook:angular && cp -r storybook-static-angular storybook-static/angular
-      - name: Deploying carbon-web-components storybook to GH pages
+
       - name: Deploying gh-actions-test to GH pages
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
