@@ -1,0 +1,132 @@
+name: e2e-tests
+
+on:
+  schedule:
+    cron: "15 15 * * *"
+
+concurrency:
+  group: e2e-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web-components:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x ]
+        browser: [ chromium, firefox ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --offline
+      - name: Build project
+        run: yarn lerna run --stream --ignore @carbon/ibmdotcom-react build
+      - name: Set Cloud Masthead env var
+        uses: ./.github/actions/set-dotenv
+        with:
+          env-file: packages/web-components/.env
+        env:
+          DDS_CLOUD_MASTHEAD: true
+      - name: Build storybook
+        working-directory: packages/web-components
+        run: yarn build-storybook
+      - name: Run e2e tests (chromium)
+        if: matrix.browser == 'chromium'
+        working-directory: packages/web-components
+        run: yarn test:e2e-storybook:test:no-percy
+      - name: Run e2e tests (firefox)
+        if: matrix.browser == 'firefox'
+        working-directory: packages/web-components
+        run: yarn test:e2e-storybook:test:no-percy:firefox
+
+      - uses: actions/checkout@v2
+        with:
+          ref: 'releases/**'
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --offline
+      - name: Build project
+        run: yarn lerna run --stream --ignore @carbon/ibmdotcom-react build
+      - name: Set Cloud Masthead env var
+        uses: ./.github/actions/set-dotenv
+        with:
+          env-file: packages/web-components/.env
+        env:
+          DDS_CLOUD_MASTHEAD: true
+      - name: Build storybook
+        working-directory: packages/web-components
+        run: yarn build-storybook
+      - name: Run e2e tests (chromium)
+        if: matrix.browser == 'chromium'
+        working-directory: packages/web-components
+        run: yarn test:e2e-storybook:test:no-percy
+      - name: Run e2e tests (firefox)
+        if: matrix.browser == 'firefox'
+        working-directory: packages/web-components
+        run: yarn test:e2e-storybook:test:no-percy:firefox
+  react:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x ]
+        browser: [ chromium, firefox ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --offline
+      - name: Build project
+        run: yarn lerna run --stream --ignore @carbon/ibmdotcom-web-components --ignore @carbon/ibmdotcom-services-store build
+      - name: Build storybook
+        working-directory: packages/react
+        run: yarn build-storybook
+      - name: Run e2e tests (chromium)
+        if: matrix.browser == 'chromium'
+        working-directory: packages/react
+        run: yarn test:e2e-storybook:test:no-percy
+      - name: Run e2e tests (firefox)
+        if: matrix.browser == 'firefox'
+        working-directory: packages/react
+        run: yarn test:e2e-storybook:test:no-percy:firefox
+
+      - uses: actions/checkout@v2
+          ref: 'releases/**'
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --offline
+      - name: Build project
+        run: yarn lerna run --stream --ignore @carbon/ibmdotcom-web-components --ignore @carbon/ibmdotcom-services-store build
+      - name: Build storybook
+        working-directory: packages/react
+        run: yarn build-storybook
+      - name: Run e2e tests (chromium)
+        if: matrix.browser == 'chromium'
+        working-directory: packages/react
+        run: yarn test:e2e-storybook:test:no-percy
+      - name: Run e2e tests (firefox)
+        if: matrix.browser == 'firefox'
+        working-directory: packages/react
+        run: yarn test:e2e-storybook:test:no-percy:firefox
