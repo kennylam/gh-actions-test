@@ -109,6 +109,7 @@ jobs:
         run: yarn test:e2e-storybook:test:no-percy:firefox
 
       - uses: actions/checkout@v2
+        with:
           ref: releases/**
       - name: Use Node.js
         uses: actions/setup-node@v2
