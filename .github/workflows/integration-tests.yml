@@ -2,7 +2,7 @@ name: e2e-tests
 
 on:
   schedule:
-    cron: "15 15 * * *"
+    cron: "15 20 * * *"
 
 concurrency:
   group: e2e-tests-${{ github.ref }}
